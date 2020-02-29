@@ -76,10 +76,13 @@ export default {
   methods: {
     async addTransaction() {
       try {
-        await axios.post('http://localhost:5555/api/v1/transactions', {
-          text: this.item.text,
-          amount: this.item.amount
-        });
+        await axios.post(
+          'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions',
+          {
+            text: this.item.text,
+            amount: this.item.amount
+          }
+        );
         await this.getTransactions();
         this.totalBalance();
         this.item.text = '';
@@ -91,7 +94,7 @@ export default {
     async getTransactions() {
       try {
         const res = await axios.get(
-          'http://localhost:5555/api/v1/transactions'
+          'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions'
         );
 
         this.items = res.data.data;
