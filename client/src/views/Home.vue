@@ -64,13 +64,13 @@ export default {
       },
       balance: 0,
       expense: 0,
-      income: 0
+      income: 0,
+      err: []
     };
   },
   async mounted() {
     await this.getTransactions();
     this.totalBalance();
-    console.log(this.balance);
   },
 
   methods: {
@@ -85,7 +85,7 @@ export default {
         this.item.text = '';
         this.item.amount = '';
       } catch (err) {
-        console.log(err);
+        this.error = err;
       }
     },
     async getTransactions() {
@@ -96,7 +96,7 @@ export default {
 
         this.items = res.data.data;
       } catch (err) {
-        console.log(err);
+        this.error = err;
       }
     },
     totalBalance() {

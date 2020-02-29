@@ -18,8 +18,11 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/transactions', transactions);
-app.get('/', (req, res) => {
-  res.send('Api for expense tracker');
+app.use('/', serveStatic(path.join(__dirname, '/client/dist')));
+
+// this * route is to serve project on different page routes except root `/`
+app.get(/.*/, function(req, res) {
+  res.sendFile(path.join(__dirname, '/client/dist/index.html'));
 });
 
 const PORT = process.env.PORT || 5500;
