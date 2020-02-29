@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const morgan = require('morgan');
+const cors = require('cors');
 
 dotenv.config({ path: './config/config.env' });
 
@@ -13,6 +14,7 @@ const transactions = require('./routes/transaction');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/transactions', transactions);
