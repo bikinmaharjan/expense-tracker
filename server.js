@@ -18,6 +18,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/transactions', transactions);
+app.get('/', (req, res) => {
+  res.send('Api for expense tracker');
+});
 
 const PORT = process.env.PORT || 5500;
 
