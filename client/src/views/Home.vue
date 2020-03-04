@@ -70,7 +70,7 @@ export default {
   },
   async mounted() {
     await this.getTransactions();
-    this.totalBalance();
+    // this.totalBalance();
   },
 
   methods: {
@@ -92,9 +92,16 @@ export default {
       }
     },
     async getTransactions() {
+      const token = {
+        headers: {
+          'auth-token': `Bearer ${localStorage.access_token}`
+        }
+      };
+
       try {
         const res = await axios.get(
-          'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions'
+          'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions',
+          token
         );
 
         this.items = res.data.data;
