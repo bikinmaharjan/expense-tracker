@@ -36,6 +36,9 @@ export default new Vuex.Store({
             reject(err);
           });
       });
+    },
+    fetchAccessToken({ commit }) {
+      commit('retrieveToken', localStorage.getItem('access_token'));
     }
   },
   modules: {}

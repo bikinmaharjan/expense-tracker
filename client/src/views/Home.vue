@@ -70,7 +70,7 @@ export default {
   },
   async mounted() {
     await this.getTransactions();
-    // this.totalBalance();
+    this.totalBalance();
   },
 
   methods: {
@@ -94,7 +94,7 @@ export default {
     async getTransactions() {
       const token = {
         headers: {
-          'auth-token': `Bearer ${localStorage.access_token}`
+          'auth-token': `${localStorage.access_token}`
         }
       };
 

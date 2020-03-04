@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/about">About</router-link>
+      <router-link to="/" v-if="$store.getters.loggedIn">Expense App</router-link>
+      <h3 v-else>Log in to Access the Expense App</h3>
     </div>
     <router-view />
   </div>
