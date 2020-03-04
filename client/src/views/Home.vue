@@ -49,6 +49,11 @@ Vue.use(Vue2Filters);
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.css';
 
+const token = {
+  headers: {
+    'auth-token': `${localStorage.access_token}`
+  }
+};
 export default {
   name: 'Home',
   mixins: [Vue2Filters.mixin],
@@ -81,7 +86,8 @@ export default {
           {
             text: this.item.text,
             amount: this.item.amount
-          }
+          },
+          token
         );
         await this.getTransactions();
         this.totalBalance();
@@ -92,12 +98,6 @@ export default {
       }
     },
     async getTransactions() {
-      const token = {
-        headers: {
-          'auth-token': `${localStorage.access_token}`
-        }
-      };
-
       try {
         const res = await axios.get(
           'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions',
