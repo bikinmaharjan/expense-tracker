@@ -23,6 +23,15 @@ app.use(express.json());
 //Login and Register route
 app.use('/api/v1', users);
 
+// //VerifyToken Middleware
+// const VerifyToken = require('./middleware/verifyToken');
+// app.use(VerifyToken);
+
+//All the routes that need authentication goes down here
+app.use('/api/v1/transactions', transactions);
+
+const PORT = process.env.PORT || 5500;
+
 //Front end routes
 app.use('/', serveStatic(path.join(__dirname, '/dist')));
 
@@ -30,14 +39,6 @@ app.use('/', serveStatic(path.join(__dirname, '/dist')));
 app.get(/.*/, function(req, res) {
   res.sendFile(path.join(__dirname, '/dist/index.html'));
 });
-
-//VerifyToken Middleware
-const VerifyToken = require('./middleware/verifyToken');
-app.use(VerifyToken);
-//All the routes that need authentication goes down here
-app.use('/api/v1/transactions', transactions);
-
-const PORT = process.env.PORT || 5500;
 
 app.listen(
   PORT,
