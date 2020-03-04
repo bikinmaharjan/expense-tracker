@@ -13,6 +13,7 @@ const connectDB = require('./config/db');
 connectDB();
 
 const transactions = require('./routes/transaction');
+const users = require('./routes/user');
 
 const app = express();
 
@@ -20,6 +21,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/transactions', transactions);
+
+app.use('/api/v1', users);
+
+//Front end routes
 app.use('/', serveStatic(path.join(__dirname, '/dist')));
 
 // this * route is to serve project on different page routes except root `/`
