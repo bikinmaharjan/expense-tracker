@@ -2,7 +2,19 @@
   <div class="home container">
     <h1>Expense Tracker</h1>
 
-    <h3>Total Balance: {{ balance | currency}}</h3>
+    <div class="row">
+      <div class="col s12" id="total" @click="table = 'total'">
+        <h4>Total Balance: {{ totalBalance | currency}}</h4>
+      </div>
+      <div class="col s6" id="income" @click="table = 'income'">
+        <h4>Total Income</h4>
+        <h5>{{totalIncome | currency}}</h5>
+      </div>
+      <div class="col s6" id="expense" @click="table = 'expense'">
+        <h4>Total Expense</h4>
+        <h5>{{totalExpense | currency}}</h5>
+      </div>
+    </div>
     <div class="main">
       <form>
         <div class="row">
@@ -17,17 +29,40 @@
         </div>
         <button @click.prevent="addTransaction()" class="waves-effect waves-light btn">Add</button>
       </form>
+
       <div class="list">
         <h3>History</h3>
         <div class="row">
-          <div class="col s8 offset-s2">
-            <table class="centered">
-              <tr>
+          <div class="col s8 offset-s2" :id="table">
+            <table class="centered" v-if="table === 'total'">
+              <tr id="table-heading">
                 <th>Transacation Name</th>
                 <th>Amount</th>
               </tr>
 
               <tr v-for="i in orderBy(items, 'createdAt', -1)" :key="i.id">
+                <td>{{ i.text | capitalize}}</td>
+                <td>{{ i.amount | currency }}</td>
+              </tr>
+            </table>
+            <table class="centered" v-if="table === 'income'">
+              <tr>
+                <th>Transacation Name</th>
+                <th>Amount</th>
+              </tr>
+
+              <tr v-for="i in orderBy(incomeTransaction, 'createdAt', -1)" :key="i.id">
+                <td>{{ i.text | capitalize}}</td>
+                <td>{{ i.amount | currency }}</td>
+              </tr>
+            </table>
+            <table class="centered" v-if="table === 'expense'">
+              <tr>
+                <th>Transacation Name</th>
+                <th>Amount</th>
+              </tr>
+
+              <tr v-for="i in orderBy(expenseTransaction, 'createdAt', -1)" :key="i.id">
                 <td>{{ i.text | capitalize}}</td>
                 <td>{{ i.amount | currency }}</td>
               </tr>
@@ -59,10 +94,7 @@ export default {
   mixins: [Vue2Filters.mixin],
   data() {
     return {
-      items: {
-        text: '',
-        amount: ''
-      },
+      items: [],
       item: {
         text: '',
         amount: ''
@@ -70,13 +102,63 @@ export default {
       balance: 0,
       expense: 0,
       income: 0,
-      err: []
+      err: [],
+      table: 'total'
     };
   },
-  async mounted() {
-    await this.getTransactions();
-    this.totalBalance();
+  computed: {
+    totalBalance() {
+      const items = this.items;
+      const amounts = items.map(items => items.amount);
+      return amounts.reduce((acc, item) => (acc += item), 0);
+    },
+    totalExpense() {
+      const items = this.items;
+      const amounts = items.map(items => items.amount);
+      const expenses = amounts.filter(function(value) {
+        return value < 0;
+      });
+
+      return expenses.reduce((acc, item) => (acc += item), 0);
+    },
+    totalIncome() {
+      const items = this.items;
+      const amounts = items.map(items => items.amount);
+      const incomes = amounts.filter(function(value) {
+        return value > 0;
+      });
+
+      return incomes.reduce((acc, item) => (acc += item), 0);
+    },
+    incomeTransaction() {
+      const items = this.items;
+      var item;
+      const incomeTransactions = [];
+
+      for (item in items) {
+        if (items[item].amount > 0) {
+          incomeTransactions.push(items[item]);
+        }
+      }
+      return incomeTransactions;
+    },
+    expenseTransaction() {
+      const items = this.items;
+      var item;
+      const expenseTransactions = [];
+
+      for (item in items) {
+        if (items[item].amount < 0) {
+          expenseTransactions.push(items[item]);
+        }
+      }
+      return expenseTransactions;
+    }
   },
+  async created() {
+    await this.getTransactions();
+  },
+  async mounted() {},
 
   methods: {
     async addTransaction() {
@@ -109,11 +191,7 @@ export default {
         this.error = err;
       }
     },
-    totalBalance() {
-      const items = this.items;
-      const amounts = items.map(items => items.amount);
-      this.balance = amounts.reduce((acc, item) => (acc += item), 0);
-    }
+    async deleteTranasactions() {}
   }
 };
 </script>
@@ -121,5 +199,27 @@ export default {
 <style lang="css">
 .input-field label {
   color: rgb(32, 32, 32);
+}
+
+#income {
+  background-color: rgb(3, 61, 3);
+  color: white;
+  cursor: pointer;
+}
+
+#expense {
+  background-color: rgb(99, 3, 3);
+  color: white;
+  cursor: pointer;
+}
+
+#total {
+  background-color: rgb(3, 87, 87);
+  color: white;
+  cursor: pointer;
+}
+
+th {
+  text-decoration: underline;
 }
 </style>
