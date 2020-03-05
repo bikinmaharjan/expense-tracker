@@ -43,6 +43,12 @@
               <tr v-for="i in orderBy(items, 'createdAt', -1)" :key="i.id">
                 <td>{{ i.text | capitalize}}</td>
                 <td>{{ i.amount | currency }}</td>
+                <td>
+                  <button
+                    class="btn-floating waves-effect waves-light red"
+                    @click="deleteTranasaction(i._id)"
+                  >X</button>
+                </td>
               </tr>
             </table>
             <table class="centered" v-if="table === 'income'">
@@ -54,6 +60,12 @@
               <tr v-for="i in orderBy(incomeTransaction, 'createdAt', -1)" :key="i.id">
                 <td>{{ i.text | capitalize}}</td>
                 <td>{{ i.amount | currency }}</td>
+                <td>
+                  <button
+                    class="btn-floating waves-effect waves-light red"
+                    @click="deleteTranasaction(i._id)"
+                  >X</button>
+                </td>
               </tr>
             </table>
             <table class="centered" v-if="table === 'expense'">
@@ -65,6 +77,12 @@
               <tr v-for="i in orderBy(expenseTransaction, 'createdAt', -1)" :key="i.id">
                 <td>{{ i.text | capitalize}}</td>
                 <td>{{ i.amount | currency }}</td>
+                <td>
+                  <button
+                    class="btn-floating waves-effect waves-light red"
+                    @click="deleteTranasaction(i._id)"
+                  >X</button>
+                </td>
               </tr>
             </table>
           </div>
@@ -172,7 +190,7 @@ export default {
           token
         );
         await this.getTransactions();
-        this.totalBalance();
+
         this.item.text = '';
         this.item.amount = '';
       } catch (err) {
@@ -191,7 +209,17 @@ export default {
         this.error = err;
       }
     },
-    async deleteTranasactions() {}
+    async deleteTranasaction(id) {
+      try {
+        await axios.delete(
+          `https://owlf-expense-tracker.herokuapp.com/api/v1/transactions/${id}`,
+          token
+        );
+        await this.getTransactions();
+      } catch (err) {
+        this.error = err;
+      }
+    }
   }
 };
 </script>
@@ -221,5 +249,8 @@ export default {
 
 th {
   text-decoration: underline;
+}
+a {
+  background-color: beige;
 }
 </style>
