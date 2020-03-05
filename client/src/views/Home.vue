@@ -176,7 +176,9 @@ export default {
   async created() {
     await this.getTransactions();
   },
-  async mounted() {},
+  async mounted() {
+    await this.getTransactions();
+  },
 
   methods: {
     async addTransaction() {

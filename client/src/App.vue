@@ -3,10 +3,27 @@
     <div id="nav">
       <router-link to="/" v-if="$store.getters.loggedIn">Expense App</router-link>
       <h3 v-else>Log in to Access the Expense App</h3>
+      <button @click="logout" v-if="$store.getters.loggedIn" style="float: right">
+        <i class="material-icons">exit_to_app</i>
+      </button>
     </div>
     <router-view />
   </div>
 </template>
+
+<script>
+import 'materialize-css';
+import 'materialize-css/dist/css/materialize.css';
+export default {
+  methods: {
+    logout() {
+      localStorage.removeItem('access_token');
+      this.$store.commit('logOut');
+      this.$router.push('/login');
+    }
+  }
+};
+</script>
 
 <style>
 #app {
