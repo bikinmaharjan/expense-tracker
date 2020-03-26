@@ -102,11 +102,11 @@ Vue.use(Vue2Filters);
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.css';
 
-const token = {
-  headers: {
-    'auth-token': `${localStorage.access_token}`
-  }
-};
+// const token = {
+//   headers: {
+//     'auth-token': `${localStorage.access_token}`
+//   }
+// };
 export default {
   name: 'Home',
   mixins: [Vue2Filters.mixin],
@@ -121,7 +121,12 @@ export default {
       expense: 0,
       income: 0,
       err: [],
-      table: 'total'
+      table: 'total',
+      token: {
+        headers: {
+          'auth-token': `${localStorage.access_token}`
+        }
+      }
     };
   },
   computed: {
@@ -189,7 +194,7 @@ export default {
             text: this.item.text,
             amount: this.item.amount
           },
-          token
+          this.token
         );
         await this.getTransactions();
 
@@ -203,7 +208,7 @@ export default {
       try {
         const res = await axios.get(
           'https://owlf-expense-tracker.herokuapp.com/api/v1/transactions',
-          token
+          this.token
         );
 
         this.items = res.data.data;
@@ -215,7 +220,7 @@ export default {
       try {
         await axios.delete(
           `https://owlf-expense-tracker.herokuapp.com/api/v1/transactions/${id}`,
-          token
+          this.token
         );
         await this.getTransactions();
       } catch (err) {
